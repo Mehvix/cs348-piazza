@@ -1,19 +1,22 @@
 <script>
+    import { createEventDispatcher } from "svelte";
+
     function filteredPosts() {
-        return posts;
-        // return filter
-        //     ? posts.filter(
-        //           (post) =>
-        //               post.subject
-        //                   .toLowerCase()
-        //                   .includes(filter.toLowerCase()) || post.nr === +filter
-        //       )
-        //     : posts;
+        return filter
+            ? posts.filter(
+                  (post) =>
+                      post.subject
+                          .toLowerCase()
+                          .includes(filter.toLowerCase()) || post.nr === +filter
+              )
+            : posts;
     }
-    // export let post;
+
     export let selected;
     export let posts;
     export let filter = "";
+
+    const dispatch = createEventDispatcher();
 </script>
 
 <div class="container">
@@ -29,6 +32,11 @@
             class="post"
             class:selected={post.nr === selected}
             on:click={() => (selected = post.nr)}
+            on:click={() => (window.location.hash = post.nr)}
+            on:click={() =>
+                dispatch("selected", {
+                    text: post.nr,
+                })}
         >
             {@html post.subject}
         </div>

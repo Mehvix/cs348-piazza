@@ -3,17 +3,14 @@
     import Text from "./Text.svelte";
 
     function question() {
-        console.log(post);
         return post.history[0];
     }
 
     function studentAnswer() {
-        console.log(post);
         post.children.find(() => child.type === "s_answer");
     }
 
     function instructorAnswer() {
-        console.log(post);
         return post.children.find(() => child.type === "i_answer");
     }
 
