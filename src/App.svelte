@@ -1,64 +1,75 @@
-<Header title="CS348 Piazza" />
-<div class="content">
-  <Sidebar posts={titles} selected={selected} on:select="changeQuestion(event.nr)"/>
-  <Content post={posts.find(({ nr }) => nr === selected)} {students} />
-</div>
-
 <script>
-import ALL_POSTS from '../cs348-fall-2017.json';
+    import ALL_POSTS from "../cs348-fall-2017.json";
 
-ALL_POSTS.sort((a, b) => b.result.nr - a.result.nr);
+    ALL_POSTS.sort((a, b) => b.result.nr - a.result.nr);
 
-function getStudents(posts) {
-  const students = [].concat(...posts.map(post => [].concat(post.tag_good || [], post.tag_endorse || [], getStudents(post.children))))
+    function getStudents() {
+        const students = [].concat(
+            ...posts.map((post) =>
+                [].concat(
+                    post.tag_good || [],
+                    post.tag_endorse || [],
+                    getStudents(post.children)
+                )
+            )
+        );
 
-  const ids = new Set();
+        const ids = new Set();
 
-  for (const student of students) {
-    const { id } = student;
-  }
+        for (const student of students) {
+            const { id } = student;
+        }
 
-  return students.filter(({ id }) => {
-    if (ids.has(id)) {
-      return false;
+        return students.filter((id) => {
+            if (ids.has(id)) {
+                return false;
+            }
+            ids.add(id);
+            return true;
+        });
     }
-    ids.add(id);
-    return true;
-  });
-}
 
-export default {
-  components: {
-    Header: './Header',
-    Sidebar: './Sidebar',
-    Content: './Content',
-  },
+    import Header from "./Header.svelte";
+    import Sidebar from "./Sidebar.svelte";
+    import Content from "./Content.svelte";
 
-  methods: {
-    changeQuestion(nr) {
-      this.set({ selected: nr });
-      window.location.hash = nr;
+    export function changeQuestion(nr) {
+        selected = nr;
+        window.location.hash = nr;
     }
-  },
 
-  computed: {
-    titles: ({ posts }) => posts.map(({ nr, history: [{ subject }] }) => ({ nr, subject })),
-    students: ({ posts }) => getStudents(posts)
-      .reduce((acc, student) => Object.assign(acc, { [student.id]: student }), {}),
-  },
-
-  data() {
-    return {
-      posts: ALL_POSTS.map(({ result }) => result),
-      selected: 28,
+    function titles() {
+        return posts.map(({ nr, history: [{ subject }] }) => ({
+            nr,
+            subject,
+        }));
     }
-  }
-}
+
+    function students() {
+        getStudents(posts).reduce(
+            (acc, student) => Object.assign(acc, { [student.id]: student }),
+            {}
+        );
+    }
+
+    export let posts = ALL_POSTS.map(({ result }) => result);
+    export let selected = 28;
+    // export let nr;
 </script>
 
+<Header title="CS348" />
+<div class="content">
+    <Sidebar
+        posts={titles()}
+        {selected}
+        on:select={changeQuestion(window.nr)}
+    />
+    <Content post={posts.find((nr) => nr === selected)} {students} />
+</div>
+
 <style>
-.content {
-  display: flex;
-  flex-direction: row;
-}
+    .content {
+        display: flex;
+        flex-direction: row;
+    }
 </style>
