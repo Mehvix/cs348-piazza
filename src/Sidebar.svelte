@@ -1,4 +1,5 @@
 <script>
+    // todo fix search
     function filteredPosts() {
         return filter
             ? posts.filter(

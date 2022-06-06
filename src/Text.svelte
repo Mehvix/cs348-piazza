@@ -4,14 +4,17 @@
 
     // todo fix scrolling issue caused by katex
     export let rendered;
-    // $: rendered = input.replace(/\$\$[^$]+\$\$/g, (equation) => {
-    //     const ren = katex.renderToString(he.decode(equation.slice(2, -2)));
-    // });
-    $: rendered = input;
+    $: rendered = () => {
+        input = input.replace(/\$\$([^$]+)\$\$/g, (eq) => {
+            return katex.renderToString(he.decode(eq.slice(2, -2)));
+        });
+        input = input.replace(/&#64;(\d+)/g, `<a href=#\$1>@\$1</a>`);
+        return input;
+    };
 
     export let input;
 </script>
 
 <div>
-    {@html rendered}
+    {@html rendered()}
 </div>

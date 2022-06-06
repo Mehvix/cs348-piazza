@@ -2,6 +2,7 @@
     export let title;
 </script>
 
+<!-- todo find more elegent method  -->
 <header>{title}</header>
 <div class="spacer" />
 

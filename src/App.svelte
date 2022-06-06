@@ -33,33 +33,33 @@
     import Sidebar from "./Sidebar.svelte";
     import Content from "./Content.svelte";
 
-    function titles() {
-        return posts.map(({ nr, history: [{ subject }] }) => ({
-            nr,
-            subject,
-        }));
-    }
+    export let titles;
+    $: titles = posts.map(({ nr, history: [{ subject }] }) => ({
+        nr,
+        subject,
+    }));
 
-    function students() {
-        getStudents(posts).reduce(
+    export let students;
+    $: students = () => {
+        return getStudents(posts).reduce(
             (acc, student) => Object.assign(acc, { [student.id]: student }),
             {}
         );
-    }
+    };
+
+    export let selected = parseInt(window.location.hash.slice(1)) || 1;
 
     onhashchange = (event) => {
         selected = parseInt(window.location.hash.slice(1));
-        console.log(selected);
         // posts = JSON.parse(JSON.stringify(posts));
     };
 
     export let posts = ALL_POSTS.map(({ result }) => result);
-    export let selected = 28;
 </script>
 
 <Header title="CS348" />
 <div class="content">
-    <Sidebar posts={titles()} {selected} />
+    <Sidebar posts={titles} {selected} />
     <Content post={posts.find((el) => el.nr === selected)} {students} />
 </div>
 
