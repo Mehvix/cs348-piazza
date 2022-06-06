@@ -2,23 +2,28 @@
     import Comment from "./Comment.svelte";
     import Text from "./Text.svelte";
 
-    function question() {
-        return post.history[0];
-    }
+    export let question;
+    $: question = post.history[0];
 
-    function studentAnswer() {
-        post.children.find(() => child.type === "s_answer");
-    }
+    export let subject;
+    $: subject = question.subject;
 
-    function instructorAnswer() {
-        return post.children.find(() => child.type === "i_answer");
-    }
+    export let content;
+    $: content = question.content;
 
-    function comments() {
-        return post.children.filter(() => child.type === "followup");
-    }
+    export let studentAnswer;
+    $: studentAnswer = post.children.find((child) => child.type === "s_answer");
 
-    function studentName() {
+    export let instructorAnswer;
+    $: instructorAnswer = post.children.find(
+        (child) => child.type === "i_answer"
+    );
+
+    export let comments;
+    $: comments = post.children.filter((child) => child.type === "followup");
+
+    // fix w non-anon
+    function studentName(students) {
         return post.anon !== "no"
             ? "Anonymous"
             : (students[post.uid] || { name: "Anonymous" }).name;
@@ -30,9 +35,9 @@
 <div class="content">
     {#if post}
         <div class="question">
-            <h1>{@html question.subject}</h1>
+            <h1>{@html subject}</h1>
             <main>
-                <Text html={question.content} />
+                <Text input={content} />
             </main>
             <div class="author">
                 <span>
@@ -48,7 +53,7 @@
             <div class="answer">
                 <h2>Student Answer</h2>
                 <article>
-                    <Text html={studentAnswer.history[0].content} />
+                    <Text input={studentAnswer.history[0].content} />
                 </article>
                 <div class="author">
                     <span>
@@ -65,7 +70,7 @@
             <div class="answer">
                 <h2>Instructors Answer</h2>
                 <article>
-                    <Text html={instructorAnswer.history[0].content} />
+                    <Text input={instructorAnswer.history[0].content} />
                 </article>
                 <div class="author">
                     {studentName(instructorAnswer)}

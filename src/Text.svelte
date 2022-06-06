@@ -2,16 +2,16 @@
     import katex from "katex";
     import he from "he";
 
-    export let content;
+    // todo fix scrolling issue caused by katex
     export let rendered;
-    $: rendered = (html) =>
-        html.replace(/\$\$[^$]+\$\$/g, (equation) => {
-            const ren = katex.renderToString(he.decode(equation.slice(2, -2)));
-            console.log(ren);
-            return ren;
-        });
+    // $: rendered = input.replace(/\$\$[^$]+\$\$/g, (equation) => {
+    //     const ren = katex.renderToString(he.decode(equation.slice(2, -2)));
+    // });
+    $: rendered = input;
+
+    export let input;
 </script>
 
-<div bind:this={content}>
+<div>
     {@html rendered}
 </div>

@@ -1,26 +1,29 @@
 <script>
-    const Text = "./Text.svelte";
+    import Text from "./Text.svelte";
 
     export let comment;
-    export let studentName;
-    $studentName: (post) =>
-        post.anon !== "no"
+    export let students;
+
+    // todo fix for non-anon
+    function studentName(post) {
+        return post.anon !== "no"
             ? "Anonymous"
             : (students[post.uid] || { name: "Anonymous" }).name;
+    }
 </script>
 
 <div class="comment">
     <div class="author">
         {studentName(comment)}
     </div>
-    <Text html={comment.subject} />
+    <Text input={comment.subject} />
 
     {#each comment.children as response}
         <div class="response">
             <div class="author">
                 {studentName(response)}
             </div>
-            <Text html={response.subject} />
+            <Text input={response.subject} />
         </div>
     {/each}
 </div>

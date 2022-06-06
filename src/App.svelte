@@ -1,6 +1,5 @@
 <script>
     import ALL_POSTS from "../cs348-fall-2017.json";
-    import { createEventDispatcher } from "svelte";
 
     ALL_POSTS.sort((a, b) => b.result.nr - a.result.nr);
 
@@ -34,11 +33,6 @@
     import Sidebar from "./Sidebar.svelte";
     import Content from "./Content.svelte";
 
-    export function changeQuestion() {
-        selected = nr;
-        window.location.hash = nr;
-    }
-
     function titles() {
         return posts.map(({ nr, history: [{ subject }] }) => ({
             nr,
@@ -53,6 +47,12 @@
         );
     }
 
+    onhashchange = (event) => {
+        selected = parseInt(window.location.hash.slice(1));
+        console.log(selected);
+        // posts = JSON.parse(JSON.stringify(posts));
+    };
+
     export let posts = ALL_POSTS.map(({ result }) => result);
     export let selected = 28;
 </script>
@@ -60,7 +60,7 @@
 <Header title="CS348" />
 <div class="content">
     <Sidebar posts={titles()} {selected} />
-    <Content post={posts.find((nr) => nr === selected)} {students} />
+    <Content post={posts.find((el) => el.nr === selected)} {students} />
 </div>
 
 <style>
