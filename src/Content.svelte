@@ -135,14 +135,18 @@
         line-height: 1.7;
 
         min-width: fit-content;
+        margin-left: 12px;
     }
 
     .count {
         font-size: 16px;
         line-height: 1.3;
-        float: left;
         margin-right: 5px;
         font-weight: bold;
+    }
+
+    #tags {
+        margin-top: 1em;
     }
 
     #tags span {

@@ -13,7 +13,7 @@
                 )
             )
         );
-
+        console.log(students);
         const ids = new Set();
 
         for (const student of students) {
@@ -67,7 +67,6 @@
     <Content post={posts.find((el) => el.nr === selected)} {students} />
 </div>
 
-<!-- {console.log(posts)} -->
 <style>
     .content {
         display: flex;
