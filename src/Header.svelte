@@ -2,16 +2,15 @@
     export let title;
 </script>
 
-<!-- todo find more elegent method  -->
 <header>{title}</header>
 <div class="spacer" />
 
 <style>
     header {
+        height: 40px;
         width: 100%;
         background-color: #3e7aab;
         color: white;
-        height: 40px;
         font-size: larger;
         font-weight: bold;
         display: flex;

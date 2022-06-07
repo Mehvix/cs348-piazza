@@ -34,10 +34,14 @@
     import Content from "./Content.svelte";
 
     export let titles;
-    $: titles = posts.map(({ nr, history: [{ subject }] }) => ({
-        nr,
-        subject,
-    }));
+    $: titles = posts.map(
+        ({ nr, created, history: [{ subject, content }] }) => ({
+            nr,
+            subject,
+            content,
+            created,
+        })
+    );
 
     export let students;
     $: students = () => {
@@ -49,7 +53,7 @@
 
     export let selected = parseInt(window.location.hash.slice(1)) || 1;
 
-    onhashchange = (event) => {
+    onhashchange = (ev) => {
         selected = parseInt(window.location.hash.slice(1));
         // posts = JSON.parse(JSON.stringify(posts));
     };
@@ -57,15 +61,20 @@
     export let posts = ALL_POSTS.map(({ result }) => result);
 </script>
 
-<Header title="CS348" />
+<Header title="CS348 Piazza" />
 <div class="content">
     <Sidebar posts={titles} {selected} />
     <Content post={posts.find((el) => el.nr === selected)} {students} />
 </div>
 
+<!-- {console.log(posts)} -->
 <style>
     .content {
         display: flex;
         flex-direction: row;
+    }
+
+    :global(a) {
+        color: #3c7cc0;
     }
 </style>

@@ -11,6 +11,12 @@
     export let content;
     $: content = question.content;
 
+    export let views;
+    $: views = post.unique_views;
+
+    export let tags;
+    $: tags = post.tags;
+
     export let studentAnswer;
     $: studentAnswer = post.children.find((child) => child.type === "s_answer");
 
@@ -33,11 +39,25 @@
 </script>
 
 <div class="content">
+    <!-- todo doesn't catch if invalid/non-existing -->
     {#if post}
-        <div class="question">
-            <h1>{@html subject}</h1>
+        <div id="question">
+            <div id="head">
+                <h1>{@html subject}</h1>
+                <div id="views">
+                    <span class="count">{@html views}</span> views
+                </div>
+            </div>
             <main>
                 <Text input={content} />
+                <!-- todo make tags search onclick -->
+                <div id="tags">
+                    {#each tags as tag}
+                        <span>
+                            <a>{tag}</a>
+                        </span>
+                    {/each}
+                </div>
             </main>
             <div class="author">
                 <span>
@@ -60,7 +80,9 @@
                         Thanks! ({(studentAnswer.tag_endorse || []).length})
                     </span>
                     <span>
-                        {studentName(studentAnswer.history[0])}
+                        {studentName(studentAnswer.history[0])} on {@html new Date(
+                            post.created
+                        ).toLocaleString()}
                     </span>
                 </div>
             </div>
@@ -78,7 +100,7 @@
             </div>
         {/if}
 
-        <div class="comments">
+        <div id="comments">
             {#each comments as comment}
                 <Comment {comment} {students} />
             {/each}
@@ -89,12 +111,83 @@
 </div>
 
 <style>
+    h1,
+    h2 {
+        margin: 0;
+    }
+
+    #head {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #views {
+        height: 22px;
+        color: white;
+        font-weight: normal;
+        border-radius: 3px;
+        background-clip: padding-box;
+        padding: 1px 6px 0;
+        text-shadow: #0a0a0a 0px 1px 0px;
+        background: #555;
+
+        font-size: 14px;
+        line-height: 1.7;
+
+        min-width: fit-content;
+    }
+
+    .count {
+        font-size: 16px;
+        line-height: 1.3;
+        float: left;
+        margin-right: 5px;
+        font-weight: bold;
+    }
+
+    #tags span {
+        color: #448ab6 !important;
+        background: #d1e8f1 !important;
+
+        cursor: pointer;
+        display: inline-block;
+        font-size: 10px;
+        line-height: 12px;
+        padding: 5px 7px;
+        border-radius: 3px;
+        background-clip: padding-box;
+        text-shadow: none;
+        border: none;
+        background: #efefef;
+        color: #777;
+        margin-right: 2px;
+        margin-bottom: 2px;
+    }
+
+    #tags > span:hover {
+        text-decoration: none;
+        background: #448ab6 !important;
+        color: white !important;
+    }
+
+    #tags a {
+        text-decoration: none;
+        color: inherit !important;
+    }
+
     .content {
         box-sizing: border-box;
         flex-grow: 1;
         padding: 0 32px;
         height: calc(100vh - 40px);
         overflow-y: scroll;
+        background-color: #eaeff4;
+    }
+
+    .content > div {
+        background-color: #ffffff;
+        border-radius: 5px;
+        box-shadow: 0 0 3px #676869;
     }
 
     .author {
@@ -104,17 +197,30 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        background-color: #f6f7f6;
+        background-clip: content-box;
+        height: 32px;
+        align-items: center;
+        border-top: 1px solid #eaecee;
     }
 
-    .question,
+    .author * {
+        margin: 8px;
+    }
+
+    #question,
     .answer {
         border: 1px solid #eeeeee;
-        padding: 32px;
         margin: 16px 0;
     }
 
-    .comments,
-    .question,
+    #question > :not(.author),
+    .answer > :not(.author) {
+        margin: 16px 24px;
+    }
+
+    #comments,
+    #question,
     .answer {
         box-sizing: border-box;
         max-width: 710px;

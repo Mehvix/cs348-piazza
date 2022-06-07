@@ -3,6 +3,7 @@
     import he from "he";
 
     // todo fix scrolling issue caused by katex
+    // todo catch replies i.e. @17057_f8
     export let rendered;
     $: rendered = () => {
         input = input.replace(/\$\$([^$]+)\$\$/g, (eq) => {
@@ -18,3 +19,9 @@
 <div>
     {@html rendered()}
 </div>
+
+<style>
+    div {
+        color: #333;
+    }
+</style>
